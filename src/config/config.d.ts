@@ -9,4 +9,7 @@ export interface Config {
     react: boolean;
     exceptions: string[];
   };
+  application: {
+    totalThreads: number;
+  };
 }
