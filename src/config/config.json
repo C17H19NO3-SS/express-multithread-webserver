@@ -1,0 +1,18 @@
+{
+  "web-server": {
+    "port": 3000,
+    "defaultRouters": ["/"],
+    "viewEngine": "ejs",
+    "webServerStartedLog": "Web server started on port $PORT!",
+    "pageContents": {
+      "index.ejs": {
+        "title": "Index Page"
+      }
+    },
+    "defaultPageContents": {
+      "port": 3000
+    },
+    "react": true,
+    "exceptions": ["/"]
+  }
+}
