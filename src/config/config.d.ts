@@ -1,5 +1,6 @@
 export interface Config {
   "web-server": {
+    threadCount: number;
     port: number;
     defaultRouters: string[];
     viewEngine: string;

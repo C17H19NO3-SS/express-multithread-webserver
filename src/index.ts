@@ -1,30 +1,31 @@
-import express from "express";
+import express, { type Request, type Response } from "express";
 import type { Config } from "./config/config";
 import path from "path";
 import chalk from "chalk";
-import { requireUncached } from "./require.uncached";
-import { Render } from "./render/renderer";
-import { init } from "./init";
+import { init, allRequests } from "./init";
+import { QueueManager } from "./q-manager/QManager";
+import { initThreads } from "./thread/thread-init";
+import { ThreadManager } from "./thread/thread-manager";
 
 try {
   const config: Config = require("./config/config") as Config;
   const app = express();
-  app.set("views", path.join("src", "views"));
-  app.set("view engine", config["web-server"].viewEngine);
-  init(config, app);
-
-  config["web-server"].defaultRouters.forEach((v) => {
-    app.get(v, (_, res) => {
-      Render({
-        res,
-        data: (requireUncached("./config/config.json") as Config)["web-server"]
-          .defaultPageCotnents,
-        page: (v.endsWith("/") ? `${v}index.ejs` : v).slice(1),
-      });
-    });
+  const threads = initThreads(config.application.totalThreads);
+  const tm = new ThreadManager(threads);
+  const qm: QueueManager = new QueueManager({
+    autoRun: true,
+    log: true,
+    queue: Array.from(allRequests.entries()),
+    queueControlInterval: 1000,
   });
 
-  app.use(express.static(path.join(__dirname, "public")));
+  qm.setNextCallback(
+    ([id, { req, res }]: [number, { req: Request; res: Response }]) => {}
+  );
+
+  app.set("views", path.join("src", "views"));
+  app.set("view engine", config["web-server"].viewEngine);
+  init(app);
 
   app.listen(config["web-server"].port, () => {
     console.log(
