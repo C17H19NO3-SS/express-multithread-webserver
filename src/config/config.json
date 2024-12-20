@@ -1,6 +1,6 @@
 {
   "web-server": {
-    "port": 3000,
+    "port": 1002,
     "defaultRouters": ["/"],
     "viewEngine": "ejs",
     "webServerStartedLog": "Web server started on port $PORT!",
@@ -16,6 +16,7 @@
     "exceptions": ["/"]
   },
   "application": {
-    "totalThreads": 2
+    "totalThreads": 4,
+    "maxRequestPerThread": 20
   }
 }

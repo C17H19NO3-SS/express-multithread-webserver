@@ -1,6 +1,5 @@
 export interface Config {
   "web-server": {
-    threadCount: number;
     port: number;
     defaultRouters: string[];
     viewEngine: string;
@@ -12,5 +11,6 @@ export interface Config {
   };
   application: {
     totalThreads: number;
+    maxRequestPerThread: number;
   };
 }
