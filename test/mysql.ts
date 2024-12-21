@@ -1,4 +1,4 @@
-import { SQL } from "../src/sql/ext-sql";
+import { SQL, type SQLConditions } from "../src/sql/ext-sql";
 
 const sql = new SQL({
   db: "test",
@@ -8,4 +8,8 @@ const sql = new SQL({
   port: 3306,
 });
 
-sql.parseConditions("test->asefasef");
+var condition: SQLConditions = sql.parseConditions(
+  "test->asefasef"
+) as SQLConditions;
+
+sql.run(condition);
