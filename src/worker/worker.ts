@@ -27,7 +27,23 @@ self.onmessage = async (event: MessageEvent<string>) => {
 
 const handleRequest = async (req: Request): Promise<Response> => {
   try {
-    // ... (existing code to generate response) ...
+    if (
+      !fs.existsSync(
+        path.join(
+          "src",
+          "views",
+          req.path.endsWith("/") ? `${req.path}/index.ejs` : req.path + ".ejs"
+        )
+      )
+    )
+      return {
+        body: await ejs.renderFile(
+          path.join("src", "error-pages", "404.ejs"),
+          {}
+        ),
+        cookies: {},
+        headers: { "Content-Type": "text/html" },
+      };
     return {
       body: await ejs.render(
         fs
